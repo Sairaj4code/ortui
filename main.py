@@ -1,5 +1,5 @@
 from textual.app import App, ComposeResult
-from textual.widgets import Header, Footer, Input, Static
+from textual.widgets import Header, Footer, Input, Label
 from textual.containers import VerticalScroll
 
 
@@ -9,7 +9,7 @@ class TerminalUI(App):
 
     def compose(self) -> ComposeResult:
         yield Header()
-        yield VerticalScroll(Static("", id="output"))
+        yield VerticalScroll(id="chat")
         yield Input(placeholder="Ask anything")
         yield Footer()
 
@@ -20,7 +20,11 @@ class TerminalUI(App):
 
     def on_input_submitted(self, event):
         text = event.input.value
-        self.query_one("#output").update(text)
+        chat = self.query_one("#chat")
+        new_label = Label(text)
+
+        chat.mount(new_label)
+        new_label.scroll_visible()
         event.input.value = ""
 
 

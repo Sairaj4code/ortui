@@ -1,9 +1,11 @@
 Static {
-    content-align: center middle;
-    height: 50%;
     border: red;
   }
 
 .column {
     width: 1fr;
   }
+
+#chat {
+  height: 1fr;
+}
