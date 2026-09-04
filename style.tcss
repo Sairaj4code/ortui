@@ -1,0 +1,38 @@
+#chat {
+    height: 1fr;
+    padding: 1 2;
+}
+
+.message-row {
+    width: 100%;
+    height: auto;
+}
+
+.user-row {
+    align: right middle;
+}
+
+.assistant-row {
+    align: left middle;
+}
+
+User_message,
+Assistant_message {
+    width: auto;
+    max-width: 70%;
+    height: auto;
+    padding: 1 2;
+    margin: 0 0 1 0;
+}
+
+User_message {
+    background: $primary-background;
+}
+
+Assistant_message {
+    background: $surface;
+}
+
+Input {
+    margin: 0 1;
+}
