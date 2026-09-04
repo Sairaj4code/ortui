@@ -1,5 +1,6 @@
+from textual import work
 from textual.app import App, ComposeResult
-from textual.widgets import Header, Footer, Input, Static
+from textual.widgets import Header, Footer, Input, Static, Markdown
 from textual.containers import Horizontal, VerticalScroll
 from ai import ask_ai
 
@@ -32,16 +33,24 @@ class TerminalUI(App):
         chat.mount(user_row)
         self.messages.append({"role": "user", "content": text})
 
+        self.fetch_ai_response(chat)
+        event.input.value = ""
+
+    @work(thread=True)
+    def fetch_ai_response(self, chat):
         assistant_response = ask_ai(self.messages)
-        assistant_message = Assistant_message(assistant_response)
+        self.messages.append({"role": "assistant", "content": assistant_response})
+
+        # Safely update the UI back on the main thread
+        self.call_from_thread(self.mount_assistant_response, chat, assistant_response)
+
+    def mount_assistant_response(self, chat, response_text):
+        assistant_message = Assistant_message(response_text)
         assistant_row = Horizontal(
             assistant_message, classes="message-row assistant-row"
         )
         chat.mount(assistant_row)
-        self.messages.append({"role": "assistant", "content": assistant_response})
-
-        new_message.scroll_visible()
-        event.input.value = ""
+        assistant_message.scroll_visible()
 
 
 class User_message(Static):
@@ -49,7 +58,7 @@ class User_message(Static):
         super().__init__(text)
 
 
-class Assistant_message(Static):
+class Assistant_message(Markdown):
     def __init__(self, text):
         super().__init__(text)
 
