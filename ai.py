@@ -53,6 +53,7 @@ TOOLS = [
             },
         },
     },
+    {"type": "openrouter:web_search"},
 ]
 
 
@@ -98,6 +99,8 @@ def ask_ai(messages_list):
                         file_name=func_args.get("file_name", ""),
                         contents=func_args.get("content", ""),
                     )
+                elif func_name == "openrouter:web_search":
+                    tool_output = "Web search executed by open router"
                 else:
                     tool_output = f"Error: Tool {func_name} not found."
 
