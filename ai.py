@@ -2,7 +2,7 @@ import json
 import os
 import requests
 from dotenv import load_dotenv
-from tools.file_tools import search_and_read_file
+from tools.file_tools import search_and_read_file, write_file
 
 load_dotenv()
 
@@ -27,7 +27,32 @@ TOOLS = [
                 "required": ["base_dir", "file_name"],
             },
         },
-    }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "write_file",
+            "description": "Create or write text/code content to a file within a base directory.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "base_dir": {
+                        "type": "string",
+                        "description": "The base directory where the file should be created (e.g., current directory '.').",
+                    },
+                    "file_name": {
+                        "type": "string",
+                        "description": "The name or relative path of the file to write (e.g., 'main.py' or 'utils/helper.py').",
+                    },
+                    "content": {
+                        "type": "string",
+                        "description": "The full code or text content to write into the file.",
+                    },
+                },
+                "required": ["base_dir", "file_name", "content"],
+            },
+        },
+    },
 ]
 
 
@@ -66,6 +91,12 @@ def ask_ai(messages_list):
                     tool_output = search_and_read_file(
                         base_dir=func_args.get("base_dir", "."),
                         file_name=func_args.get("file_name", ""),
+                    )
+                elif func_name == "write_file":
+                    tool_output = write_file(
+                        base_dir=func_args.get("base_dir", "."),
+                        file_name=func_args.get("file_name", ""),
+                        contents=func_args.get("content", ""),
                     )
                 else:
                     tool_output = f"Error: Tool {func_name} not found."
